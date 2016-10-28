@@ -197,3 +197,44 @@ for ( var g in data['groups']){
   }
 
 }
+
+var questionaireData = data.results.surveyInfo.filter(a => a.surveyType === "QUESTION" )
+
+function printQuestions(questions){
+  var keys = []
+
+  for ( var i in questions){
+    for ( var k in Object.keys(questions[i].surveyData)){
+      var key = Object.keys(questions[i].surveyData)[k]
+      if (keys.indexOf(key) < 0)
+        keys.push(key)
+    }
+  }
+
+  var heading = ""
+  for (var k in keys){
+    heading += keys[k]+","
+  }
+  console.log(heading+"accountId")
+
+  for ( var i in questions){
+    var participantLine = ""
+
+    for ( var k in keys){
+       participantLine += "\""+questions[i].surveyData[keys[k]] +"\","
+    }
+
+    participantLine += encode(questions[i].accountId)
+
+    console.log(participantLine)
+  }
+
+}
+
+var entryQuestionnaire = questionaireData.filter(a => a.surveyData.countryGrowUp == undefined )
+console.log("\n")
+printQuestions(entryQuestionnaire)
+
+var exitQuestionnaire = questionaireData.filter(a => a.surveyData.countryGrowUp != undefined )
+console.log("\n")
+printQuestions(exitQuestionnaire)
